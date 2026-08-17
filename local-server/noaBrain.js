@@ -60,9 +60,9 @@ function parseDate(text) {
   const t = clean(text);
   const today = new Date();
   const iso = (d) => d.toISOString().slice(0, 10);
-  if (/\bהיום\b/.test(t)) return iso(today);
-  if (/\bמחר\b/.test(t)) return iso(new Date(today.getTime() + 864e5));
-  if (/\bמחרתיים\b/.test(t)) return iso(new Date(today.getTime() + 2 * 864e5));
+  if (t.includes('מחרתיים')) return iso(new Date(today.getTime() + 2 * 864e5));
+  if (t.includes('מחר')) return iso(new Date(today.getTime() + 864e5));
+  if (t.includes('היום')) return iso(today);
   const m = t.match(/(\d{1,2})[./-](\d{1,2})(?:[./-](\d{2,4}))?/);
   if (m) {
     const day = +m[1], mon = +m[2];
@@ -109,7 +109,13 @@ function normalizeOrder(text, meta = {}) {
   // כתובת / אתר
   let address = null;
   const am = raw.match(/(?:ל|אל|כתובת|אתר|ברחוב|רחוב)\s*[:\-]?\s*([\u0590-\u05FF\w'"\- ]{3,40})/);
-  if (am) address = am[1].trim();
+  if (am) {
+    address = am[1]
+      .split(/\s(?:מחרתיים|מחר|היום|בשעה|ב-?\d)/)[0]
+      .replace(/\s+(דחוף|בהול|מיידי)\s*$/, '')
+      .trim();
+    if (address.length < 2) address = null;
+  }
 
   const order = {
     id: 'ORD-' + Date.now().toString(36).toUpperCase(),
