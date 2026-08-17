@@ -54,6 +54,7 @@ export function useLiveMessages() {
         const data = (await res.json()) as { messages: LiveMessage[] };
         if (cancelled) return;
         merge(data.messages);
+        firstLoad.current = false;
         setStatus("live");
       } catch {
         if (!cancelled) setStatus("offline");
