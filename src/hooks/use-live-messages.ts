@@ -77,6 +77,7 @@ export function useLiveMessages() {
       });
       if (!res.ok) throw new Error("send failed");
       const data = (await res.json()) as { message: LiveMessage };
+      if ((payload.from ?? "me") === "me") playOutgoingTick();
       merge([data.message]);
       return data.message;
     },
