@@ -38,7 +38,29 @@ type Tab = "chats" | "studio" | "crm";
 function Index() {
   const [tab, setTab] = useState<Tab>("chats");
   const [activeChat, setActiveChat] = useState<string | null>(null);
+  const [sound, setSound] = useState(true);
   const { messages, status, send } = useLiveMessages();
+
+  useEffect(() => {
+    setSound(isSoundEnabled());
+    const unlock = () => unlockAudio();
+    window.addEventListener("pointerdown", unlock, { once: true });
+    return () => window.removeEventListener("pointerdown", unlock);
+  }, []);
+
+  const toggleSound = async () => {
+    const next = !sound;
+    setSound(next);
+    setSoundEnabled(next);
+    if (next) {
+      unlockAudio();
+      playIncomingChime();
+      const granted = await requestNotificationPermission();
+      toast.success(granted ? "צלצול והתראות מופעלים 🔔" : "צלצול מופעל 🔔 (התראות חסומות בדפדפן)");
+    } else {
+      toast("הצלצול הושתק 🔕");
+    }
+  };
 
   const openChat = (chatId: string) => {
     setActiveChat(chatId);
@@ -54,20 +76,30 @@ function Index() {
               <h1 className="font-display text-lg font-bold">🧰 ח. סבן · מרכז הודעות</h1>
               <p className="text-[11px] opacity-85">וואטסאפ · CRM · דוח בוקר 06:30</p>
             </div>
-            <span className="flex items-center gap-1.5 rounded-full bg-brand/25 px-2.5 py-1 text-[11px] font-semibold">
-              <span
-                className={`size-2 rounded-full ${
-                  status === "live"
-                    ? "animate-pulse bg-brand-foreground"
-                    : status === "connecting"
-                      ? "bg-warning"
-                      : "bg-destructive"
-                }`}
-              />
-              {status === "live" ? "מחובר לשרת" : status === "connecting" ? "מתחבר..." : "מנותק"}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={toggleSound}
+                aria-label={sound ? "השתק צלצול" : "הפעל צלצול"}
+                className="grid size-8 place-items-center rounded-full bg-brand/25 active:scale-95"
+              >
+                {sound ? <Bell className="size-4" /> : <BellOff className="size-4 opacity-70" />}
+              </button>
+              <span className="flex items-center gap-1.5 rounded-full bg-brand/25 px-2.5 py-1 text-[11px] font-semibold">
+                <span
+                  className={`size-2 rounded-full ${
+                    status === "live"
+                      ? "animate-pulse bg-brand-foreground"
+                      : status === "connecting"
+                        ? "bg-warning"
+                        : "bg-destructive"
+                  }`}
+                />
+                {status === "live" ? "מחובר לשרת" : status === "connecting" ? "מתחבר..." : "מנותק"}
+              </span>
+            </div>
           </div>
         </header>
+
 
         <main className="flex-1 overflow-hidden pb-20">
           {tab === "chats" && (
