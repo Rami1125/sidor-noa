@@ -1,10 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { LayoutGrid, MessageCircle, Palette } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bell, BellOff, LayoutGrid, MessageCircle, Palette } from "lucide-react";
+import { toast } from "sonner";
 import { ChatSim } from "@/components/hs/ChatSim";
 import { Studio } from "@/components/hs/Studio";
 import { Crm } from "@/components/hs/Crm";
 import { useLiveMessages } from "@/hooks/use-live-messages";
+import {
+  isSoundEnabled,
+  playIncomingChime,
+  requestNotificationPermission,
+  setSoundEnabled,
+  unlockAudio,
+} from "@/lib/notify";
 
 export const Route = createFileRoute("/")({
   head: () => ({
