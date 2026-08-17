@@ -73,26 +73,34 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.9rem;
+  --background: oklch(0.98 0.008 120);
+  --foreground: oklch(0.22 0.02 160);
+  --brand: oklch(0.62 0.13 158);
+  --brand-foreground: oklch(0.99 0.01 150);
+  --brand-deep: oklch(0.32 0.07 165);
+  --warning: oklch(0.72 0.16 70);
+  --info: oklch(0.62 0.13 240);
+  --chat-bg: oklch(0.95 0.02 110);
+  --bubble-out: oklch(0.9 0.07 150);
+  --bubble-in: oklch(1 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.45 0.1 163);
+  --primary-foreground: oklch(0.99 0.01 150);
+  --secondary: oklch(0.94 0.02 150);
+  --secondary-foreground: oklch(0.3 0.05 165);
+  --muted: oklch(0.95 0.012 140);
+  --muted-foreground: oklch(0.52 0.03 165);
+  --accent: oklch(0.9 0.06 150);
+  --accent-foreground: oklch(0.28 0.06 165);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.9 0.015 150);
+  --input: oklch(0.9 0.015 150);
+  --ring: oklch(0.62 0.13 158);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -109,6 +117,14 @@
 }
 
 .dark {
+  --brand: oklch(0.68 0.14 158);
+  --brand-foreground: oklch(0.18 0.03 165);
+  --brand-deep: oklch(0.24 0.05 165);
+  --warning: oklch(0.78 0.15 70);
+  --info: oklch(0.7 0.12 240);
+  --chat-bg: oklch(0.18 0.02 165);
+  --bubble-out: oklch(0.33 0.07 160);
+  --bubble-in: oklch(0.25 0.02 165);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -152,4 +168,25 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+}
+
+@utility chat-canvas {
+  background-color: var(--color-chat-bg);
+  background-image:
+    radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--brand) 12%, transparent) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 60%, color-mix(in oklch, var(--brand) 9%, transparent) 0 2px, transparent 3px);
+  background-size: 46px 46px, 64px 64px;
+}
+
+@utility surface-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 24px -18px color-mix(in oklch, var(--brand-deep) 60%, transparent);
 }
