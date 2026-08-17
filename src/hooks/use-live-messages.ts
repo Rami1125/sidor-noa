@@ -27,14 +27,15 @@ export function useLiveMessages() {
       if (fresh.length === 0) return prev;
       if (!firstLoad.current) {
         const received = fresh.filter((m) => m.from === "them");
-        if (received.length > 0) {
+        const last = received[received.length - 1];
+        if (last) {
           playIncomingChime();
-          const last = received[received.length - 1];
           showMobileNotification(
             `🔔 הודעה חדשה מ${last.author}`,
             last.text.replace(/[*_~`]/g, "").slice(0, 120),
           );
         }
+
       }
       const next = [...prev, ...fresh];
       next.sort((a, b) => a.ts - b.ts);
